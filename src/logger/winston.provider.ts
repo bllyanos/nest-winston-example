@@ -1,5 +1,6 @@
 import { Provider } from '@nestjs/common';
 import * as winston from 'winston';
+import LokiTransport = require('winston-loki');
 
 export const WinstonProvider: Provider = {
   provide: 'WINSTON_PROVIDER',
@@ -21,6 +22,13 @@ export const WinstonProvider: Provider = {
             )} | ${level.toUpperCase()} ${message}${restProps()}`;
           },
         ),
+      }),
+
+      new LokiTransport({
+        host: 'http://localhost:3100',
+        json: true,
+        format: winston.format.json(),
+        labels: { job: 'nest-logging-winston' },
       }),
     ],
   }),

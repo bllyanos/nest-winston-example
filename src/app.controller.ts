@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { LoggerService } from './logger/logger.service';
 
@@ -10,8 +10,15 @@ export class AppController {
   ) {}
 
   @Get()
-  getHello(): string {
-    this.ls.log('Masoook', { sadis: 'mantap' });
+  getHello(
+    @Query('message') message?: string,
+    @Query('error') isError?: string,
+  ): string {
+    if (!isError) {
+      this.ls.log('Masoook', { sadis: 'mantap', query: message });
+    } else {
+      this.ls.error('Error loh', { query: message });
+    }
     return this.appService.getHello();
   }
 }
